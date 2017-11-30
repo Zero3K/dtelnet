@@ -1,0 +1,139 @@
+[Keymap]
+;
+; 20121028.LZS
+;	From now on, you can map menu-commands to keys, too.
+;	Currently available: NewWindow and PrintScreen.
+;	Example:
+;
+; Map Ctrl+W to function 'NewWindow', Ctrl+P to function 'PrintScreen'
+; Notice the lack of quotes.
+;
+; Ctrl,0x57 = NewWindow
+; Ctrl,0x50 = PrintScreen
+;
+; ========================================================
+;
+; location
+;	dtelnet.ini file [Keymap] section
+;	<something>.ts file [Keymap] section (see 'Favorites' menu)
+;
+; usage syntax:
+; map           --> [mod_lock_list,]keycode = "value_string"
+; mod_lock_list --> mod_lock_elem [, mod_lock_list]
+; mod_lock_elem --> mod_lock_name [ control_char]
+; mod_lock_name --> Shift  | Ctrl  | Alt  | AltGr | Win | Ext |
+;		    LShift | LCtrl | LAlt | LWin  |
+;		    RShift | RCtrl | RAlt | RWin  |
+;		    Num[Lock] | Caps[Lock] | Scroll[Lock]
+; control_char  --> + | - | *
+; value_string: list of printable characters and
+;               the following escape-sequences:
+;			\\	->	\
+;			\"	->	"
+;			\e	->	ESC (=27=0x1b)
+;			\r	->	CR (=13=0x0d)
+;			\n	->	LF (=10=0x0a)
+;			\t	->	TAB (=9=0x09)
+;			\b	->	BS (=8=0x08)
+;			\xXX (two hexa digits)	-> (the character whose ASCII code is specified by the hexdigits)
+;
+; meaning of control_char:
+;	+: modifier pressed/lock active (default if neither specified)
+;	-: modifier unpressed/lock inactive
+;	*: doesn't matter (default for not listed modifiers/locks)
+;
+; example mapping: map Shift+ESC to 'ESC ESC' sequence, if neither Ctrl nor Alt pressed:
+;
+;    Shift,Ctrl-,Alt-,27="\x1b\x1b"
+;    Shift+,Ctrl-,Alt-,Win*,Num*,Caps*,Scroll*,27="\x1b\x1b"
+;
+; (these two lines are equivalent)
+;
+; Notes:
+; 1. some keyboards have AltGr key, it acts as if Alt+Control were pressed
+
+; 2. modifer "Ext" is useful only to distinguish between these pairs (see the examples):
+;	Enter        and NumEnter
+;	Left-Control and Right-Control
+;	Left-Alt     and Right-Alt
+
+; 3. quotes are mandatory before and after value-string, inside use \" for quote
+;    empty value ("") means map to empty string
+;    empty value without quotes means deletion of previous mapping
+
+; 4. the order of mappings can be important, the first matching condition wins, eg:
+;    Wrong:
+;	9       = "TAB (any modifiers/lock)"
+;	Shift,9 = "Shift+TAB"		-- never activates
+;    Right:
+;	Shift,9 = "Shift+TAB"
+;	9       = "TAB (any modifiers/lock)"
+
+; 5. No, symbolic names cannot be used instead of keycode.
+;    consult your winuser.h file, or this site:
+;    http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
+;    a little help:
+;	A-Z: ASCII code 65- 90	(0x41-0x5A)
+;	0-9: ASCII code 48- 57	(0x30-0x39)
+;	F1-F24:        112-135	(0x70-0x87)
+;	Num0..Num9:     96-105	(0x60-0x69)
+;	Enter:		13	(0x0d)		/* map with "Ext-" modifier */
+;	NumEnter:	13	(0x0d)		/* map with "Ext+" modifier */
+;       ESC:		27	(0x1b)
+;	TAB:		 9	(0x09)
+;	Shift:		16	(0x10)
+;	Control:	17	(0x11)		/* use "Ext" to distinguish */
+;	Alt:		18	(0x12)		/* use "Ext" to distinguish */
+;
+;       arrows and stuff (ascii art):
+;	+----+----+----+    +----+----+----+----+
+;	|Insr|Home|PgUp|    |NmLk| /  | *  | -  |
+;	| 45 | 36 | 33 |    |144 |111 |106 |109 |
+;	+----+----+----+    +----+----+----+----+
+;	|Del |End |PgDn|    | 7  | 8  | 9  | +  |
+;	| 46 | 35 | 34 |    |103 |104 |105 |107 |
+;	+----+----+----+    +----+----+----+    +
+;			    | 4  | 5  | 6  |    |
+;			    |100 |101 |102 |    |
+;	     +----+	    +----+----+----+----+ 
+;	     | Up |	    | 1  | 2  | 3  |Entr|
+;	     | 38 |	    | 97 | 98 | 99 | 13 |
+;	+----+----+----+    +----+----+----+    + 
+;	|Left|Down|Rght|    | 0       | .  |    |
+;	| 37 | 40 | 39 |    | 96      |110 |    |
+;	+----+----+----+    +----+----+----+----+ 
+
+;
+; More examples for mapping:
+
+;    Let mumeric keypad '+' map to string "Numpad+ "
+;	0x6b			= "Numpad+"
+;    Let Control + numeric keypad '+' map to string "CtrlNumpad+"
+;	Ctrl,0x6b		= "CtrlNumpad+"
+
+;    Let Shift+3 map to string "+++"
+;	Shift,0x43		= "+++"
+;    Let Control+Shift+3 map to string "+++"
+;	Control,Shift,0x43	= "+++"
+
+;    Deleting a previous mapping for Numpad+
+;	0x6b			=
+
+;    Using "Ext" to distinguish the two Enters:
+;	Shift,Ext-,13 = "Shift-Enter "
+;	Shift,Ext+,13 = "Shift-NumEnter "
+
+; map Alt+M to "mc\r", Alt+Shift+M to "mcedit ":
+Alt,Shift-,0x4d = "mc\r"
+Alt,Shift+,0x4d = "mcedit "
+
+;    A few more without comment:
+
+; Shift,Num-,Caps+,0x41	= "A==>\"Á\""
+; deleting
+; 0x6b			=
+; 0x6b			= "\x18"
+; 0x6a			= "Numpad*"
+; LShift,RShift,0x10	= "Both Shift "
+; LCtrl,RCtrl,0x11	= "Both Control "
+; LAlt,RAlt,0x12	= "Both Alt "

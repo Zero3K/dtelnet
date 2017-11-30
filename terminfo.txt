@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+infocmp xterm | \
+sed 's/^xterm|/xterm-kbs8|/;s/kbs=\\177/kbs=\\10/' >xterm-kbs8.ti
+tic xterm-kbs8.ti
+echo xterm-kbs8 created
+
+infocmp xterm | \
+sed 's/^xterm|/xterm-kbs177|/;s/kbs=^H/kbs=\\177/' >xterm-kbs177.ti
+tic xterm-kbs177.ti
+echo xterm-kbs177 created
+
+infocmp xterm | \
+sed 's/^xterm|/xterm-utf8-kbs8|/;s/kbs=\\177/kbs=\\10/' >xterm-utf8-kbs8.ti
+tic xterm-utf8-kbs8.ti
+echo xterm-utf8-kbs8 created
+
+infocmp xterm | \
+sed 's/^xterm|/xterm-utf8-kbs177|/;s/kbs=^H/kbs=\\177/' >xterm-utf8-kbs177.ti
+tic xterm-utf8-kbs177.ti
+echo xterm-utf8-kbs177 created

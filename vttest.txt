@@ -1,0 +1,138 @@
+ 1. Test of cursor movement				-- ok
+ 2. Test of screen features				-- no smooth-scroll
+ 3. Test of character sets
+    8. Test VT100 Character Sets			-- partial (1,A,B=ASCII/ANSI; 0/2=graphics)
+    9. Test Shift In/Shift Out (SI/SO)			-- B=A=ASCII/ANSI
+ 4. Test of double-sized characters			-- not supported
+ 5. Test of keyboard
+    1. LED Light					-- not supported
+    2. Auto Repeat					-- ok
+    3. Keyboard Layout
+    4. Cursor Keys					-- partial (vt52 mode is not supported)
+    5. Numeric Keypad
+    6. Editing Keypad
+    7. Function Keys
+    8. AnswerBack					-- no (Ctrl+Break sends ^C)
+    9. Control Keys					-- ok (using Ctrl+2 .. Ctrl+8)
+ 6. Test of terminal reports
+    1. <ENQ> (AnswerBack Message)			-- ok
+    2. Set/Reset Mode - LineFeed / newline		-- ok
+    3. Device Status Report (DSR)			-- ok
+    4. Primary Device Attributes (DA)			-- ok ESC[?62;2c
+    5. Secondary Device Attributes (DA)			-- ok ESC[>1;95;0c
+    6. Tertiary Device Attributes (DA)			-- ok DCS[!| <ipaddr> ST
+    7. Request Terminal Parameters (DECREQTPARM)	-- ok
+ 7. Test of VT52 mode					-- not supported
+ 8. Test of VT102 features				-- ok
+ 9. Test of known bugs
+    1. Bug A: Smooth scroll to jump scroll		-- no smooth-scrool
+    2. Bug B: Scrolling region				-- no double-width/height
+    3. Bug C: Wide to narrow screen			-- ok
+    4. Bug D: Narrow to wide screen			-- ok
+    5. Bug E: Cursor move from double- to single-wide line
+							-- not supported
+    6. Bug F: Column mode escape sequence		-- ok
+    7. Wrap around with cursor addressing		-- ok
+    8. Erase right half of double width lines		-- not supported
+    9. Funny scroll regions				-- ok
+10. Test of reset and self-test
+    1. Reset to Initial State (RIS)			-- ok ESC c
+    2. Invoke Terminal Test (DECTST)
+    3. Soft Terminal Reset (DECSTR)			-- ok ESC[!p
+11. Test non-VT100 terminals
+    1. Test of VT220 features
+	1. Test reporting functions
+	    1. Test Device Status Report (DSR)
+		1. Test Keyboard Status			-- ok ESC[?27;1;0;0n
+		2. Test Operating Status		-- ok ESC[?0n
+		3. Test Printer Status
+		4. Test UDK Status
+	2. Test screen-display functions
+	    1. Test Send/Receive mode (SRM)		-- *** fail
+	    2. Test Visible/Invisible Cursor (DECTCEM)	-- ok
+	    3. Test Erase Char (ECH)			-- ok
+	    4. Test Protected-Areas (DECSCA)		-- *** fail
+	3. Test 8-bit controls (S7C1T/S8C1T)		-- ok (not entirely)
+    2. Test of VT320 features
+	2. Test cursor-movement
+	    1. Test Pan down (SU)			-- ok
+	    2. Test Pan up (SD)				-- ok
+	    3.
+	    4.
+	3. Test page-format controls
+	    1. Test set columns per page (DECSCPP)	-- ok ESC[<num>$|
+	    2. Test set lines per page (DECSLPP)	-- ok ESC[<num>t
+    3. Test of VT420 features
+	2. Test cursor-movement
+	    7. Test Back Index (DECBI)			-- ok ESC 6
+	    8. Test Forward Index (DECFI)		-- ok ESC 9
+    4. Test of VT520 features
+	2. Test cursor-movement
+	    7. Test Character-Position-Absolute (HPA)	-- ok
+	    8. Test Cursor-Back-Tab (CBT)		-- ok
+	    9. Test Cursor-Character-Absolute (CHA)	-- ok
+	   10. Test Cursor-Horizontal-Index (CHT)	-- ok
+	   11. Test Horizontal-Position-Relative (HPR)	-- ok
+	   12. Test Line-Position-Absolute (VPA)	-- ok
+	   13. Test Next-Line (CNL)			-- ok
+	   14. Test Previous-Line (CPL)			-- ok
+	   15. Test Vertical-Position-Relative (VPR)	-- ok
+	3.
+	4.
+	5.
+	6. Test screen-display functions
+	    1. Test No Clear on Column Change (DECNCSM)	-- ok
+	    2. Test Set Cursor Style (DECSCUSR)		-- not supported
+    5. Test ISO-6429 cursor-movement
+	1. Test Character-Position-Absolute (HPA)	-- ok
+	2. Test Cursor-Back-Tab (CBT)			-- ok
+	3. Test Cursor-Character-Absolute (CHA)		-- ok
+	4. Test Cursor-Horizontal-Index (CHT)		-- ok
+	5. Test Horizontal-Position-Relative (HPR)	-- ok
+	6. Test Line-Position-Absolute (VPA)		-- ok
+	7. Test Next-Line (CNL)				-- ok
+	8. Test Previous-Line (CPL)			-- ok
+	9. Test Vertical-Position-Relative (VPR)	-- ok
+    6. Test ISO-6429 colors
+	1.
+	2. Display color test-pattern			-- partial
+	3. Test SGR-0 color reset			-- ok
+	4. Test BCE-style clear line/display (ED, EL)	-- ok
+	5. Test BCE-style clear line/display (ECH, Indexing)
+							-- ok
+	6. Test of VT102-style features with BCE
+	    1. Test of cursor movements			-- ok
+	    2. Test of screen features			-- ok
+	    3. Test Insert/Delete Char/Line		-- ok (no double width)
+	7. Test other ISO-6249 features with BCE
+	    2. Test Repeat (REP)			-- ** fail
+	    3. Test Scroll-Down (SD)			-- ok
+	    4. Test Scroll-Left (SL)			-- ok
+	    5. Test Scroll-Right (SR)			-- ok
+	    6. Test Scroll-Up (SU)			-- ok
+	8. Test screen features with BCE		-- partial
+	9. Test screen features with ISO 6429 22-27	-- partial
+    7. Test other ISO-6429 fetures
+	1.
+	2.
+	3. Test Scroll-Down (SD)			-- ok
+	4. Test Scroll-Left (SL)			-- ok
+	5. Test Scroll-Right (SR)			-- ok
+	6. Test Scroll-Up (SU)				-- ok
+    8. Test XTERM special features
+	2. Test reporting functions
+	    2. Request Mode/Report Mode			-- ok (many unknown's)
+	3. Set Windows Title				-- ok
+	4. Font features				-- not supported
+	5. Mouse features
+	    3. X10 Mouse Compatibility			-- ok
+	    4. Normal Mouse Tracking			-- ok
+	6.
+	7. Alternate-Screen features
+	    1. Switch to/from alternate screen		-- ok
+	    2. Improved alternate screen (1047)		-- ok
+	    3. Better alternate screen (1049)		-- ok
+	8. Window modify-operations			-- partial
+	9. Window report-operations			-- partial (size of window chars/pixels)
+
+BCE = Background Color Erase

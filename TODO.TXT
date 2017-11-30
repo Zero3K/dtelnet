@@ -1,0 +1,9 @@
+TODO
+----
+* /I option stopped working -- should be revived
+* SSH 1 support
+* SSH 2 support
+* mouse button config dialog
+* rework login window
+* make cursor configureable
+* discard trailing spaces for cut and paste

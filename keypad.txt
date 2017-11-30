@@ -1,0 +1,80 @@
+Keypad FAQ
+
+Q: How to switch into application mode?
+A: With ESC-seqences: On/Off = ESC= / ESC>
+
+Q: How can I preset application mode?
+A: In the Connect/Remote menu with option
+   Keypad Appl. Mode = All preset
+
+Q: What 'Keypad Appl. Mode = Fkeys preset' means?
+A: Only the topmost four key will be preset,
+   for the others use the ESC= / ESC> seqences.
+
+Q: So what do the keypad keys actaully send?
+A: See the table below:
+
+1. Numeric mode (term=linux)
+
+Key        Default Shift   NumLock Shift+NumLock Note
+
+0          esc[2~  0       0       esc[2~        Insert
+1          esc[4~  1       1       esc[4~        End
+2          esc[B   2       2       esc[B         Down
+3	   esc[6~  3       3       esc[6~        PgDn/Next
+4          esc[D   4       4       esc[D~	 Left
+5                  5       5
+6          esc[C   6       6       esc[C	 Right
+7	   esc[1~  7       7       esc[1~	 Home
+8          esc[A   8       8       esc[A	 Up
+9          esc[5~  9       9       esc[5~        PgUp/Prior
+Decimal    esc[3~  .or,    .or,    esc[3~	 Delete
+Enter	   ^M	   ^M      ^M      ^M
++	   +       +       +       +
+-          -       -       -       -
+*          *       *       *       *
+/          /       /       /       /
+NumLock    (works) (works) (works) (works)
+
+Summary: In 'numeric mode' Shift (while pressed) reverts NumLock.
+
+2. Application mode (term=linux)
+
+Key        Default Shift   NumLock Shift+NumLock Note
+
+0          escOp   esc[2~  escOp   0		 Insert
+1          escOq   esc[4~  escOq   1		 End
+2          escOr   esc[B   escOr   2		 Down
+3	   escOs   esc[6~  escOs   3		 PgDn/Next
+4          escOt   esc[D~  escOt   4		 Left
+5          escOu           escOu   5
+6          escOv   esc[C   escOv   6		 Right 
+7	   escOw   esc[1~  escOw   7		 Home
+8          escOx   esc[A   escOx   8		 Up
+9          escOy   esc[5~  escOy   9		 PgUp/Prior
+Decimal    escOn   esc[3~  escOn   .or,		 Delete
+Enter	   escOM   ^M	   escOM   ^M
++	   escOl   +       escOl   +
+-          escOS   -       escOS   -
+*          escOR   *       escOR   *
+/          escOQ   /       escOQ   /
+NumLock    escOP   (works) escOP (works)
+
+Summary: 
+In 'application mode' Shift (while pressed) reverts
+application mode (doesn't revert NumLock). 
+NumLock doesn't matter, only when Shift pressed.
+
+Update in July 2014:
+
+    From now on, you can tune the keypad-behaviour more precisely
+    with the /Kpam parameter:
+
+	/Kpam xy	x - code of the setting of the top four keys (NumLock / * -)
+			y - code of the setting of the other numeric keys
+	/Kpam x		x - code for every numeric keys
+
+	the codes:
+	    N	preset to numeric mode	(default behaviour, recommended)
+	    A	preset to application mode
+	    n	can be set via ESC= and ESC>

@@ -1,0 +1,40 @@
+possible build problems
+
+* old/missing *.lib files (eg ws3_32.dll, hhctrl.ocx):
+  * use implib.exe or similiar program to create *.lib file from *.dll
+    Note: when using 'implib', make sure to use option -f:
+	implib -f ws2_32.lib ws2_32.dll
+  * use gcc/mingw, it can link directly from *.dll (and *.ocx) files
+
+* missing headers (eg mstcpip.h), missing definitions (eg AI_ADDRCONFIG)
+  ad hoc #define's and typedef's, see OLD_WIN32_COMPILER in platform.h
+
+* win16 vs win32+ incompatibilies
+  see plaform.h -- eventually Win16-version will cease to exist
+
+* win32 vs win64 incomatibilies
+  less severe than the previous; mainly about using the right types
+
+  variable size:   WPARAM, LPARAM, (u)intptr_t, INT_PTR
+  fixed size:      (u)int16_t, (u)int32_t, (u)int64_t
+  dubious:         short, wchar_t, WORD, int, DWORD, long, LONG, long long
+
+* cross-compiling under Linux
+  The neccessary programs has names like 'i686-w64-mingw32-gcc' or 
+  'i586-mingw32msvc-nm' etc.
+  That's all very logical, but I suggest creating symlinks in /usr/local/bin
+  like these:
+
+	/usr/local/bin/win32-as		-> /usr/bin/i686-w64-mingw32-as
+	/usr/local/bin/win32-cpp	-> /usr/bin/i686-w64-mingw32-cpp
+	/usr/local/bin/win32-dlltool	-> /usr/bin/i686-w64-mingw32-dlltool
+	/usr/local/bin/win32-gcc	-> /usr/bin/i686-w64-mingw32-gcc
+	/usr/local/bin/win32-nm		-> /usr/bin/i686-w64-mingw32-gcc-nm
+	/usr/local/bin/win32-windres	-> /usr/bin/i686-w64-mingw32-windres
+
+	/usr/local/bin/win64-as		-> /usr/bin/x86_64-w64-mingw32-as
+	/usr/local/bin/win64-cpp	-> /usr/bin/x86_64-w64-mingw32-cpp
+	/usr/local/bin/win64-dlltool	-> /usr/bin/x86_64-w64-mingw32-dlltool
+	/usr/local/bin/win64-gcc	-> /usr/bin/x86_64-w64-mingw32-gcc-win32
+	/usr/local/bin/win64-nm		-> /usr/bin/x86_64-w64-mingw32-gcc-nm
+	/usr/local/bin/win64-windres	-> /usr/bin/x86_64-w64-mingw32-windres

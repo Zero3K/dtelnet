@@ -1,0 +1,14 @@
+Key sequences for 'rxvt' terminal type
+
+	deflt  Shift  Control
+
+Up      ESC[A  ESC[a  ESCOa
+Down    ESC[B  ESC[b  ESCOb
+Right   ESC[C  ESC[c  ESCOc
+Left    ESC[D  ESC[d  ESCOd
+Insert  ESC[2~ ESC[2$ ESC[2^
+Delete  ESC[3~ ESC[3$ ESC[3^
+Home    ESC[7~ ESC[7$ ESC[7^
+End     ESC[8~ ESC[8$ ESC[8^
+PgUp    ESC[5~ ESC[5$ ESC[5^
+PgDn    ESC[6~ ESC[6$ ESC[6^

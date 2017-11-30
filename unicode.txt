@@ -1,0 +1,72 @@
+version 1.3.9 is the first version that tries to support
+Unicode, meaning UTF-8 towards the server,
+and UTF-16LE towards Windows API.
+
+Notes:
+
+o This file is in utf8; here is some characters to prove it:
+
+    árvíztűrő tükörfúrógép
+
+    Η ζωή που δεν εξετάζεται δεν αρμόζει σε άνθρωπο
+
+    Ĉ ĉ Ĝ ĝ Ĥ ĥ Ĵ ĵ Ŝ ŝ Ŭ ŭ
+
+    АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ
+    абвгдеёжзийклмнопрстуфхцчшщъыьэюя
+
+    £↓←→↑▒∙░♦≥π─§┼≤└┘≠≠±█┬┤├┴┌┐│
+
+o Characters that don't exist in the used font should be substituted
+  whith a 'default' character; often a square box: □
+
+  Sometimes instead of that you get a half-width rectangle
+  that might cause troubles. This depends on the other characters in
+  the same line. It might have something to do with font-linking or font-fallback.
+
+  Test:
+	        ± ⎺ ⎻ ⎼ ⎽ -- plusminus, then four undisplayable char
+	      ≠ ± ⎺ ⎻ ⎼ ⎽ -- not-equal, plusminus, then four undisplayable char
+			     their width (in some cases) is the half of the expected
+
+o Some Windows versions might not support
+  Unicode supplemental characters
+
+  Test: this unicode character '🍔' (U+1F354; UTF-8: f0-9f-8d-94; UTF-16: d83c-df54)
+  represents a hamburger
+
+  Even if it is unlikely to be displayed properly,
+  it should be displayed as _one_ empty square,
+  not as _two_ empty square.
+
+o When connecting a Unix server, there are some environment variables, that should
+  be set to indicate UTF-8 mode. Some of those:
+
+    LC_CTYPE=lang_country.UTF-8		# most important
+    LESSCHARSET=utf-8			# if you use pager 'less'
+    NLS_LANG=lang_country.AL32UTF8	# for Oracle-users
+
+  In an ideal world, the client (dtelnet.exe) could send these to the server (it
+  would be the [EnvVars] section in dtelnet.ini or in the session-file). 
+  Sadly the tipical telnet-server doesn't accept these variables from the client,
+  so you may want to use some .profile-files to set your variables.
+
+  In file 'dtelnet.set' there is a suggestion for those who want handle both 8-bit
+  and unicode client-connections: use the new terminal-types 'xterm-utf8-kbs8'
+  or 'xterm-utf8-kbs177' (see backspace.txt) for unicode connections, and check
+  the value of $TERM in your .profile, eg:
+
+	case "$TERM" in
+	*-utf8-*)
+	    export LC_CTYPE=en_US.UTF-8
+	    export NLS_LANG=american_america.AL32UTF8
+	    export LESSCHARSET=utf-8
+	;;
+	*)
+	    export LC_CTYPE=en_US.ISO-8859-1
+	    export NLS_LANG=american_america.WE8ISO8859P1
+	    export LESSCHARSET=latin-1
+	;;
+	esac
+
+    See also terminfo.txt for an example, how to define these terminal-types with tic(1)

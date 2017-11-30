@@ -1,0 +1,198 @@
+<pre>
+<b>Incomplete list of supported ESC-sequences</b>
+(notation: SR = scrolling region)
+
+<b>SO</b> (0x0e)		Switch to G1 charset (DEC)
+<b>SI</b> (0x0f)		Switch to G0 charset (DEC)
+
+<b>ESC <i>sp</i> F</b> 	 	S7C1T send 7-bit controls (default)
+<b>ESC <i>sp</i> G</b> 	 	S8C1T send 8-bit controls (partially supported)
+
+<b>ESC # 8</b> 	 	DECALN Fill the screen with letter 'E'
+<b>ESC #</b> <i>other_character</i>   DEC___ Do nothing
+
+<b>ESC 7</b>	 		DECSC save cursor position (and some other data)
+<b>ESC 8</b>	 		DECRC restore cursor position (and some other data)
+
+<b>ESC =</b>			DECKPAM keypad application mode (if enabled in 'Connect' dialog)
+<b>ESC &gt;</b>			DECKPNM keypad numeric mode (default mode)
+
+<b>ESC ( B</b>			set G0 charset to the default (ANSI) charset ('ESC(A' does the same)
+<b>ESC ( 0</b>			set G0 charset to the graphics charset (VT100 pseudo-graphics)
+<b>ESC ) B</b>			set G1 charset to the default (ANSI) charset ('ESC)A' does the same)
+<b>ESC ) 0</b>			set G1 charset to the graphics charset (VT100 pseudo-graphics)
+
+<b>ESC D</b>	 		IND cursor down (at the bottom of SR: scroll up)
+<b>ESC E</b>	 		NEL cursor goes to the beginning of the next line (at the bottom of SR: scroll up)
+<b>ESC M</b>	 		RI  cursor up (at the top of SR: scroll down)
+<b>ESC Z</b>	 		DECID the same as ESC [ c
+
+<b>ESC c</b>	 		RIS hard terminal reset
+
+<b>ESC [ @</b>	 		ICH insert a space
+<b>ESC [</b> <i>num</i> <b>@</b>		ICH insert <i>num</i> space
+
+<b>ESC [ A</b>	 		CUU up 1 line (doesn't leave the scrolling region)
+<b>ESC [</b> <i>num</i> <b>A</b>		CUU up <i>num</i> line (doesn't leave the scrolling region)
+
+<b>ESC [ B</b>	 		CUB down 1 line (doesn't leave the scrolling region)
+<b>ESC [</b> <i>num</i> <b>B</b>		CUB down <i>num</i> line (doesn't leave the scrolling region)
+
+<b>ESC [ C</b>	 		CUF right 1 position (doesn't leave the current line)
+<b>ESC [</b> <i>num</i> <b>C</b>		CUF right <i>num</i> position (doesn't leave the current line)
+
+<b>ESC [ D</b>	 		CUB left 1 position (doesn't leave the current line)
+<b>ESC [</b> <i>num</i> <b>D</b>		CUB left <i>num</i> position (doesn't leave the current line)
+
+<b>ESC [ E</b>	 		CNL cursor goes to the first position of the next line (doesn't leave the scroll area)
+<b>ESC [</b> <i>num</i> <b>E</b>		CNL cursor goes to the first position of the <i>n</I>th line (doesn't leave the scroll area)
+
+<b>ESC [ F</b>	 		CPL cursor goes to the first position of the previous line (doesn't leave the scroll area)
+<b>ESC [</b> <i>num</i> <b>F</b>		CPL cursor goes to the first position of the <i>n</I>th previous line (doesn't leave the scroll area)
+
+<b>ESC [ G</b>	 		CHA cursor goes to the first position of the current line
+<b>ESC [</b> <i>num</i> <b>G</b>		CHA cursor goes to the <I>numth</I> position of the current line (or to the last)
+
+<b>ESC [</b> <i>row</i> <b>;</b> <i>column</i> <b>H</b>	CUP cursor to <i>row</i>,<i>column</i>
+<b>ESC [</b> <i>row</i> <b>H</b>		CUP cursor to <i>row</i>,1
+<b>ESC [ H</b>			CUP cursor to 1,1
+
+<b>ESC [ I</b>			CHT move 1 TAB-position forward
+<b>ESC [</b> <i>num</i> <b>I</b>		CHT move <i>num</i> TAB-position forward
+
+<b>ESC [ J</b>			ED  clear screen: from cursor to end
+<b>ESC [ 0 J</b>		ED  clear screen: from cursor to end
+<b>ESC [ 1 J</b>		ED  clear screen: from start to cursor
+<b>ESC [ 2 J</b>		ED  clear screen: from start to end
+<b>ESC [ 3 J</b>		    clear history (xterm extension)
+
+<b>ESC [ K</b>			EL  clear in this line: from cursor to end
+<b>ESC [ 0 K</b>		EL  clear in this line: from cursor to end
+<b>ESC [ 1 K</b>		EL  clear in this line: from start to cursor
+<b>ESC [ 2 K</b>		EL  clear in this line: from start to end
+
+<b>ESC [ L</b>	 		IL  insert 1 line at the cursor position, scroll down (only in SR)
+<b>ESC [</b> <i>num</i> <b>L</b>		IL  insert <i>num</i> lines at the cursor position, scroll down (only in SR)
+
+<b>ESC [ M</b>			DL  delete 1 line at the cursor position, scroll up (only in SR)
+<b>ESC [</b> <i>num</i> <b>M</b>		DL  delete <i>num</i> lines at the cursor position, scroll up (only in SR)
+
+<b>ESC [ S</b>			SU  insert 1 empty line at the top of the scrolling region
+<b>ESC [</b> <i>num</i> <b>S</b>		SU  insert <i>num</i> empty lines at the top of the scrolling region
+
+<b>ESC [ T</b>			SD  insert 1 empty line at the bottom of the scrolling region
+<b>ESC [</b> <i>num</i> <b>T</b>		SD  insert <i>num</i> empty lines at the bottom of the scrolling region
+
+<b>ESC [ `</b>	 		HPA cursor goes to the first position of the current line
+<b>ESC [</b> <i>num</i> <b>`</b>		HPA cursor goes to the <I>numth</I> position of the current line (or to the last)
+
+<b>ESC [ a</b>			HPR cursor right 1 position (doesn't leave the current line)
+<b>ESC [</b> <i>num</i> <b>a</b>		HPR cursor right <i>num</i> position (doesn't leave the current line)
+
+<b>ESC [ c</b>	 		DA1 send Primary Device Attributes. We send ESC[62;2c
+<b>ESC [ &gt; c</b>	 	DA2 send Secondary Device Attributes. We send ESC[&gt;1;95;0c
+<b>ESC [ = c</b>	 	DA3 send Tertiary Device Attributes. We send DCS ! | <i>local-IP</i> ST
+
+<b>ESC [ d</b>			VPA cursor to the first line (same column)
+<b>ESC [</b> <i>num</i> <b>d</b>		VPA cursor to the <i>numth</i> line (same column)
+
+<b>ESC [ e</b>			VPR same as <b>ESC [ B</b>
+<b>ESC [</b> <i>num</i> <b>e</b>		VPR same as <b>ESC [ <i>num</i> B</b>
+
+<b>ESC [</b> <i>row</i> <b>;</b> <i>column</i> <b>f</b>	HVP cursor to <i>row</i>,<i>column</i>
+<b>ESC [</b> <i>row</i> <b>f</b>		HVP cursor to <i>row</i>,1
+<b>ESC [ f</b>			HVP cursor to 1,1
+
+<b>ESC [</b> <i>numlist</i> <b>h</b> - set mode(s)
+<b>ESC [</b> <i>numlist</i> <b>l</b> - reset mode(s)
+
+   numlist (one or more elements (semicolon-separated)):
+
+     <b>4</b> - IRM     display characters: insert (set) / owerwrite (reset)
+    <b>20</b> - LNMIRM  'Return' sends CRLF (set) / CR (reset)
+
+<b>ESC [ ?</b> <i>numlist</i> <b>h</b> - set private mode(s)
+<b>ESC [ ?</b> <i>numlist</i> <b>l</b> - reset private mode(s)
+
+   <i>numlist</i> (one or more elements (semicolon-separated)):
+     <b>1</b> - DECCKM  keyboard application mode (set) / ANSI mode (reset)
+     <b>2</b> - DECANM  keyboard VT52 mode -- ignored
+     <b>3</b> - DECCOLM switch to 24x132 mode (set) / switch to 24x80 mode (reset)
+     <b>4</b> - DECSCLM scrolling mode -- not implemented
+     <b>5</b> - DECSCNM inverse video (affects the whole screen, not equal to <b>ESC [ 7 m</b>)
+     <b>6</b> - DECOM   if set, the cursor cannot leave the scrolling region
+     <b>7</b> - DECAWM  auto wrap: if set, when line is full: next line (or scroll)
+     <b>8</b> - DECARM  auto repeat enabled
+     <b>9</b> - mouse reporting (oldest/simplest version, X10 compatible)
+    <b>10</b> - select G0 charset -- linux-specific
+    <b>11</b> - select G1 charset -- linux-specific
+    <b>25</b> - DECTCEM cursor visible (set) / invisible
+    <b>47</b> - alternate screen (set) / normal screen (reset)
+    <b>66</b> - DECNKM keypad application mode (set) / numeric mode (reset)
+    <b>67</b> - DECBKM backspace key sends ^H (set) / ^? (reset) -- <b>We don't do this</b>
+  <b>1000</b> - mouse reporting (newer version, X11 compatible)
+  <b>1001</b> - mouse reporting (like 1000 with an extra function we don't do)
+  <b>1002</b> - mouse reporting (like 1000 with an extra function)
+  <b>1003</b> - mouse reporting (like 1002 with an extra function we don't do)
+  <b>1005</b> - another mode of mouse reporintg ("UTF8")
+  <b>1006</b> - another mode of mouse reporintg ("SGR")
+  <b>1015</b> - another mode of mouse reporintg ("URXVT")
+  <b>1047</b> - set:   switch to alternate screen
+	 reset: if on the alternate screen, clear it; switch to normal screen
+  <b>1048</b> - set: save cursor; reset: restore cursor
+  <b>1049</b> - set:   save cursor, switch to alternate screen, clear screen
+	 reset: switch to normal screen, restore cursor
+
+<b>ESC [ m</b> - clear/reset attributes/colors
+<b>ESC [</b> <i>numlist</i> <b>m</b> - set attributes/colors
+
+   <i>numlist</i> (one or more elements (semicolon-separated)):
+	 <b>0</b> - clear/reset attributes/colors
+	 <b>1</b> - bold on (dtelnet: change foreground colors (for some colors))
+	 <b>4</b> - underline on
+	 <b>5</b> - blink on (dtelnet: change background colors (for some colors))
+	 <b>7</b> - inverse on (switch background and foreground colors)
+	<b>10</b> - select charset #0
+	<b>11</b> - select charset #1
+	<b>12</b> - select charset #2 -- ignored
+	<b>21</b> - bold off (dtelnet: don't change foreground colors)
+	<b>24</b> - underline off
+	<b>25</b> - blink off (dtelnet: don't change background colors)
+	<b>27</b> - inverse off
+    <b>30..37</b> - set foreground color (-30 => 0..7 => dark-black..dark-white)
+  <b>38;5;<i>col</i></b> - set foreground color (0..255)
+	<b>39</b> - set default foreground color (cf /A command line option)
+    <b>40..47</b> - set background color (-40 => 0..7 => dark-black..dark-white)
+  <b>48;5;<i>col</i></b> - set background color (0..255)
+	<b>49</b> - set default foreground color (cf /A command line option)
+    <b>90..97</b> - set foreground color (-90+8 => 8..15  => light-black..light-white)
+  <b>100..107</b> - set background color (-100+8 => 8..15  => light-black..light-white)
+
+<b>ESC [ 5 n</b>    DSR-OD: report status as <b>ESC [ 0 n</b> (meaning: status OK)
+<b>ESC [ 6 n</b>    DSR-CPR: report cursor position as <b>ESC [</b> <i>row</i> <b>;</b> <i>column</i> <b>R</b>
+
+<b>ESC [ ? 6 n</b>  DSR-XCPR: report cursor position as <b>ESC [ ?</b> <i>row</i> <b>;</b> <i>column</i> <b>; 1 R</b>
+<b>ESC [ ? 26 n</b> DSR-KBD: report keyboard status/version</b>
+
+<b>ESC [</b> <i>top</i>; <i>bottom</i> <b>r</b>  DECSTBM set scrolling area (aka set top and bottom margins)
+
+<b>ESC [ s </b>     save cursor position (and some other data)    (=  ESC 7)
+<b>ESC [ u </b>     restore cursor position (and some other data) (=  ESC 8)
+  
+<b>ESC [ 4 ;</b> <i>pixel-rows</i> <b>;</b> <i>pixel-columns</i> <b>t</b>		set window size (pixels)
+<b>ESC [ 8 ;</b> <i>character-rows</i> <b>;</b> <i>character-columns</i> <b>t</b>	set window size (characters)
+
+<b>ESC [ 14 t</b>   get window size; reply: <b>ESC [ 4 ;</b> <i>pixel-rows</i> <b>;</b> <i>pixel-columns</i> <b>t</b>
+<b>ESC [ 18 t</b>   get window size; reply: <b>ESC [ 8 ;</b> <i>character-rows</i> <b>;</b> <i>character-columns</i> <b>t</b>
+
+<b>ESC [ x </b>     DECREQTPARM (request terminal parameters)
+
+<b>ESC ] 2 ; str ST</b>     set window title
+
+<b>IND</b> (0x84)   same as <b>ESC D</b>
+<b>NEL</b> (0x85)   same as <b>ESC E</b>
+<b>SCI</b> (0x9A)   same as <b>ESC Z</b>
+<b>CSI</b> (0x9B)   same as <b>ESC [</b> (starts a sequence)
+<b>ST</b>  (0x9C)   same as <b>ESC \</b> (ends some sequences)
+<b>OSC</b> (0x9D)   same as <b>ESC ]</b> (starts a sequence)
+</pre>

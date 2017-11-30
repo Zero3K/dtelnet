@@ -1,0 +1,18 @@
+[ExtraCharsets]
+latin2-win1250=\xa1\xa5\xb1\xb9\xa5\xbc\xb5\xbe\xa6\x8c\xb6\x9c\xab\x8d\xbb\x9d\xa9\x8a\xb9\x9a\xac\x8f\xbc\x9f\xae\x8e\xbe\x9e\xb7\xa1
+
+; there is a separate keymap.txt file you might want to read
+; example for settings variables via keyboard:
+; Ctrl+0: ISO-8859-2
+; Ctrl+1: UTF-8
+; [Keymap]
+; Ctrl,Shift-,Alt-,0x30="export LC_CTYPE=hu_HU.ISO-8859-2; export LESSCHARSET=latin2; export NLS_LANG=american_america.EE8ISO8859P2; export NLS_NCHAR=AL32UTF8\r"
+; Ctrl,Shift-,Alt-,0x31="export LC_CTYPE=hu_HU.UTF-8; export LESSCHARSET=UTF-8; export NLS_LANG=american_america.AL32UTF8; export NLS_NCHAR=AL32UTF8\r"
+
+; also you might be interested in 'envvars':
+; [EnvVars]
+; LC_CTYPE="hu_HU.ISO-8859-2"
+; TZ="Europe/Budapest"
+; ORA_SDTZ="Europe/Budapest"
+; NLS_DATE_FORMAT="YYYYMMDD.HH24MISS"
+; NLS_LANG="American_America.EE8ISO8859P2"

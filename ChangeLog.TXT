@@ -1,0 +1,822 @@
+The Changelog of Dave's Telnet
+
+2017-03/08 Lorinczy Zsigmond
+	* lines.hc, dtelnet.set: A bit better pseudo-graph support
+	  (the final goal is unicode support)
+	* emul.c, seq.html, vttest.txt: some unimportant new sequneces
+	* dtelnet.c, utils.c: in win32/64 using 'dtelnet.chm' instead of
+	  'dtelnet.hlp'
+	* uconv.hc and others: working on Unicode
+	* font.c: skip fonts beginning with @atsign
+
+2017-02 Lorinczy Zsigmond
+	* socket.hc, platform.h: IPv6 support
+
+2016-06/09 John G Zvonar, Lorinczy Zsigmond
+	* attrib, dtelnet: ChooseColor to set the basic four colors,
+	  save/load into.ini file
+
+2016-05 Lorinczy Zsigmond
+	* more info in status line
+
+2016-04 Lorinczy Zsigmond
+	* term.c: correction regarding keypress CTRL+2..8
+	  don't do this when Alt(Gr) is pressed
+
+2016-01 Lorinczy Zsigmond
+	* emul.c: emulResetTerminal now calls termSetMouseRep(0)
+	* filetype.c: fix with filemasks "ext"=>"*.ext"
+	* dtelnet.set: new term-types 'xterm-kbs177', 'xterm-kbsH'
+	  (see backspace.txt for details)
+	* utils.c: using USERPROFILE if HOME is not set
+
+2015-08/2016-01 Lorinczy Zsigmond
+	* term.c: CTRL+2 .. CTRL+8 now sends special codes:
+	    CTRL+2 = ^@ 00H     CTRL+3 = ^[ 0x1B     CTRL+4 = ^\ 0x1C
+	    CTRL+5 = ^] 1DH     CTRL+6 = ^^ 0x1E     CTRL+7 = ^_ 0x1F
+	    CTRL+8 = ^? 7FH
+	* filetype: new file-extension: 'dtelnet_ses' (not in 16-bit)
+	* envvars/babit/raw: support for NewEnvironment telnet option
+	* dtelnet: new menu command: Connect/Reconnect
+	* emul: reorginzing ESC-sequences, especially strings
+	    such as ESC P ... ESC \ and ESC ] ... ESC \
+
+2015-01/03 Lorinczy Zsigmond
+	* dtelnet.c, term.hc: trying to implement mouse tripleclick
+	* select.hc: separated from term.hc
+	* emul.c: started to implement a table-base sequence-handling
+	  first victims: ESC [ c, ESC [ > c, ESC Z and a few others
+
+2014-07/08 Lorinczy Zsigmond
+	* term.h and others: reorganized 'keypad application mode', now it is more flexible
+	  (not that many user would use it; I suggest setting it to 'Num')
+	* term.hc, status.c: changed the order in window-size: rows*columns,
+	   to be 'resize' and 'stty size' compatible
+	  (but 'Size=' in ini-file and command-line-option /G stay as they were)
+	* term.hc,resource.h,dtelnet.c: 'paste' functionality is now configurable:
+	   right or middle mouse-button
+	* scroll,lines: copy lines to history, even if the scrolling region isn't at the top
+	* dtelnet.c: when connected, Alt+AltGr activates menu
+	* attrib.hc: newly created, parts from 'lines' and 'term'
+	  
+2014-05-15/20 Lorinczy Zsigmond
+	* scroll.c, term.c and others: reorganized 'resize' (add lines, delete lines)
+	  to fix a bug
+	* emul.c, term.h: reorganized saved-cursor data, to be both 'mc' and 'vttest'
+	  compatible when switching to/from the alternate screen
+	* termwin.c: bugfix in linenoTerminalToServerCursor
+	* emul.c: bugfix in emulBackspace: set term.cursor.fLinefull to FALSE;
+	  emulParamNext: first semicolon sets numParams to 2
+	* raw.c: bugfix in parseTelnetCommand: flow between cases (LFLOW and XDISPLOC)
+
+2014-02-09/04-03 Lorinczy Zsigmond
+	* emul.c: bugfix in emulCursorAddress, now ESC[<lineno>H works too
+	* emul.c: DECSTBM now moves cursor to position 1,1 (depending on DECOM)
+	* emul.c: ESC[21m now calls setBold(FALSE)
+	* lines.h: new AttrData: Attrib and AttrFlags in a structure
+	* emul.c/dtelnet.c: problem with bold/blink on default colors
+		earlier: didn't work at all
+		now: it works, but if they are between 0 and 7 (dark-black..dark-white)
+	* dtelnet.c: in /A command-line parameter (Attrib in INI-file)
+	  you can specify four colors (not only two):
+	  normalForeground/emphasizedForeground-on-normalBackground/emphasizedBackground
+	* seq.html: still incomplete list of supported ESC-sequences
+	* For VT/VMS users ScrollLock and Pause become Help and Do (ESC[28~ and ESC[29~)
+	* Also for them there is an option to map Insert/Home/PageUp/Delete/End/PageDown to
+	  Find/InsertHere/Remove/Select/PrevScreen/NextScreen
+	* utils.ch: new functions getExeName, getExePath, makeIniFileName, hasHomeDir, getHomeDir
+	* filetype.hc and others: two directory config-files:
+	  1. %HOME%\dtelnet 2. the directory of the executable
+
+2014-02-07 Lorinczy Zsigmond
+	* emul.c: bugfix in emulShCtrlMagic, release as 1.3.1a
+
+2014-01-02/21 Lorinczy Zsigmond
+	* term.c and others: support for horizontal wheel (to tell the truth, I cannot test it),
+	  also support mouse_button_event (ESC[?1002h)
+	* font.c: bugfix in EnumFontFamilies' callback function (affected Win16 version)
+	* many files: reorganized key-sequences and terminal-types, added file backspace.txt
+	  support for Shift+Alt+Ctrl modifiers has been improved and generalised
+	* many files: Fixing warnings from OpenWatcom (not that it produced usable executable)
+
+2013-12-23 Lorinczy Zsigmond
+	* termdef.hc and others: new field 'servname' in Emul: what we send to the server,
+	  for env-var TERM, eg. both 'xterm-new' and 'xterm-old' may send 'xterm'
+
+2013-12-16 Lorinczy Zsigmond
+	* With option /A background and foreground colours can be any of the 256 colours,
+	  eg: /A 0xf8-0xf0: light-grey ink on dark-grey paper
+
+2013-10-22 Lorinczy Zsigmond
+	* font.hc: secondary font can be selected 
+	  (I would suggest Lucida Console, Consolas or Courier New)
+	  later: EnumFontFamiliesEx is usable, too, but it doesn't seem to help at all
+
+2013-09-30/10-08 Lorinczy Zsigmond
+	* dtchars.c: bugfix
+	* many files: experimenting with Windows64
+
+2013-08-30 Lorinczy Zsigmond
+	* lines.h, emul.c, term.c, dtelnet.c: trying to implement 256-color mode,
+	  reorganising attribute-handling
+	* dtelnet.set: new terminal type rxvt-256color
+
+2013-08-05 Lorinczy Zsigmond
+	* emul.c: SetWindowTitle now works with sequence ESC]0;textESC\ too
+	* dtelnet.c: keep-alive timer (should be configurable from ini/menu/commandline)
+	* socket.c, platform.h: setsockopt (SO_KEEPALIVE), WSAIoctl
+
+2013-04-29/06-25 Lorinczy Zsigmond
+	* term.c, term.h: ClearType compatibility; reorganizing selection
+	* emul.c, term.h: now BLINK means intense background,
+	  just like BOLD means intense foreground
+	* termwin.h, termwin.c: new types and rutins for Points, Rectangles and Ranges.
+	* dtelnet.rc, dtelnet.set, others: more function keys (limit 26, editable 24)
+	* font.c: trying to deal with the troubles caused by bold fonts,
+	  using DWL_USER in DialogProc to access local variables
+	* dtelnet.test.sh: added
+	* lines.hc, term.c: new Attrib type, support of underline
+	* scroll.hc: new files, centralizing scrolling
+	* emul: support for DECCOLM (ESC[?3l, ESC[?3h)
+	* term.c: termSetFont became termSetFontPart1 and termSetFontPart2,
+	  termCreateWnd calls only Part1 (ShowWindow and UpdateWindow also dropped)
+	* term.c/emul.c: support for X10 mouse reporting too (ESC[?9h)
+
+2012-11-16 Lorinczy Zsigmond
+	* trying to implement bold fonts
+
+2012-11-12 Lorinczy Zsigmond
+	* term.h, term.c, dtelnet.c: redoing mouse-wheel
+
+2012-10-27 Lorinczy Zsigmond
+	* keymap feature should be extended to menu-function (PrintScreen, for example)
+	  termkey.h, .c, dtelnet.c
+	* utils.h/.c: new 'bescape' function
+
+2012-09-05 Lorinczy Zsigmond
+	* dtelnet.set: defined key-sequences kf21-kf26 for 'xterm' and 'rxvt'
+	* dtelnet.rc, resource.h, emul.h, term.c termdef.c:
+	* more function keys (limit=26, display=24)
+	  why 26? some keyboards have 16 function keys, plus 'Shift' adds ten to the number
+	  why 24? it seemed a nice even number
+	* utils.h: escape ESC as \e
+	* version.h: 1.2.8
+
+2012-08-14/22 Lorinczy Zsigmond
+	* termkey.h, termkey.c, term.c: beginnings of a global keymap-feature
+        * harap.h, harap.c: string tokenizer (with Hungarian comments -- sorry)
+	* keymap.txt: new file
+	* version.h: 1.2.7
+	* editor.c: EFK_LOCAL_UP/EFK_LOCAL_DOWN
+	* gcc.mak: new files (termkey, buffdata, harap)
+	* filetype.c: calling tkmLoadFromIniFile
+	* utils.c: new function bunescape
+	* pack.bat: dtelnet.hlp removed from, *.txt added to binary packages
+
+2012-05-18 Lorinczy Zsigmond
+	* buffdata.h, buffdata.c, emul.h, termdef.c, dtelnet.rc etc:
+	  support of longer function-key-sequences
+
+2012-02-07/20 Lorinczy Zsigmond
+	* version.h: Version 1.2.6
+	* term.c: Shift undoes mouse Reporting
+	* emul.c: fix in setting default background esc[49m
+	* dtelnet.c: /A black-white and /A black-White are now different:
+	  white=dark-white, White=light-white (the same is true for both the background
+	  and the foreground color)
+	* Maximize now doesn't actually maximize, to prevent to unused
+	  areas at the right/bottom; initSetWindowPos now tries to keep the window
+	  inside the workplace
+
+2011-06-09 Lorinczy Zsigmond
+	* version.h: 2011
+	* emul.hc, term.c: Better support for rxvt: shift+arrows,
+	  ctrl+arrows (test in mcedit)
+	* rxvt.txt: new
+
+2010-12-15/21 Lorinczy Zsigmond
+	* dtelnet.set: fixing rxvt. Has it been wrong all along?
+	* emul.hc, term.hc: Better support for G0/G1 graphics/standard
+	  (test: midnight commander on 'rxvt' terminal)
+	* multiple files: reorganizing 'lines', implementing smcup/rmcup
+	  (test: midnight commander on 'rxvt' terminal, ^O feature)
+	* multiple files: keypad mode is now disabled by default
+
+2010-07-16/21 Lorinczy Zsigmond
+	* Version.h: year 2010
+	* multiple files: Support for Keypad mode (application/numeric)
+	* shkeys.c: option -kpam to test it
+
+2009-03-12/21 Lorinczy Zsigmond
+	* VERSION: Version 1.2.5
+	* multiple files: function 'Local Execute' to call ShellExecute
+	  for sequence DCS x 1 program/file ST
+	  (DCS=0x90 or ESC P, ST=0x9C or ESC \)
+	  Warning: This option is not saved into DTELNET.INI (security),
+	  only to favorite.TS (LocalExec=TRUE/FALSE)
+
+2007-12-05 Lorinczy Zsigmond
+	* DTELNET.C: /Maximize option
+
+2006-04-26/28 Lorinczy Zsigmond
+        * VERSION.H: year 2005->2006
+	* EMUL.C: emulCharDelete and emulCharDeleteCore got a 'bKeyboard' parameter.
+	* FONT.C: stdlib.h included
+	* DTELNET.RC, RESOURCE.H, FONT.C: in Win16 GetACP() and GetOEMCP() do not exist
+          show value of GetKBCodePage() instead
+	* EMUL.C: support for ESC[8;<ln>;<cl>t, ESC[14t, ESC[18t to let resize work
+
+2005-10-23 Lorinczy Zsigmond
+        * Terminal/Font/Size became Combobox to allow unlisted values.
+
+2005-07-25 Lorinczy Zsigmond
+	* VERSION.H: version 1.2.4
+	* some function-parameters became const in connectRememberTerm,
+	  telnetFatal, socketError, socketConnect
+	* PROXY.C, UTILS.C, ARGV.C: cleaning warnings
+	* TERM.C: termSysKeyDown: better support for deadchars,
+          eg ALT+^ on German kbd now sends ESC ^
+
+2005-05-30/2005-06-01 Lorinczy Zsigmond
+	* Fixing X-server detection in SOCKET.C
+	* VERSION.H: version 1.2.3
+	* LINES.C: function "linesFill" to Fill areas in a line
+	  with a constant character
+
+2005-01-19/2005-03-10 Lorinczy Zsigmond
+        * DTELNET.RC: Incrementing version number to 1.2.2
+        * TERM.C, EMUL.C: Trying to implement "answerback message"
+	* SOCKET.H, SOCKET.C: Detecting local X server
+	* RAW.H, RAW.C: New method for handling telnet options,
+	  set XDISPLOC only if X server detected
+	* UTILS: escape, unescape: parameters reorganized: from, fromlen, to, maxlen
+	* CONNECT.C: variable useProfile removed
+	* ARGV: long options, advanced option handling
+	* BORL32.MAK: response-file for ILINK32
+	* VERSION.H to store version number
+
+2004-10-24/2004-11-19 Lorinczy Zsigmond
+	* font.h, font.c, resources.h, dtelnet.rc, term.h, term.c,
+          lines.c, dtchars.h, dtchars.c:
+          adding a 2nd font for character-graphic (OEM_CHARSET)
+	  This makes possible paralel using of OEM_CHARSET (box-drawing)
+	  and special letters of an other ANSI-like font (eg EASTEUROPE).
+	* Extension in Terminal/Font dialog:
+          - showing the name of both fonts
+          - let the user to select from more charsets
+          - showing the system's OEM/ANSI charset (Win32 only)
+	* printing.c: Calling printingCloseDialog in printingEndJob,
+	  call termGetChars to access data in PrintScreen
+	* protocol.h, raw.c, socket.h, socket.c: implemeting XDISPLOC
+	  for people running X-server within their Windows
+	* writing CRLF instead of LF in log.logProtocol
+	* emul.c: using termGetChars in emulSendCurrentLine
+	* dtelnet.c: calling connectGetDefVars and connectLoadVars in WinMain
+	* emul.c: when not connected, 'Enter' performs CRLF - meaningless
+	* lines.c: line expanding changed in linesSetChar
+	* Released dtelnet 1.2.1
+
+2004-03-19/2004-03-21 Lorinczy Zsigmond
+	* logging CRLF in EMUL.emulSendCurrentLine
+	* Parameter 'data' in LOG.logSession became const
+        * Parameter 'data' in SOCKET.socketWrite became const
+        * DTELNET.RC: Incrementing version number to 1.2.1
+        * EMUL.C: calling emulCursorCheck in emulSendCurrentLine
+	* Fixing borl32.mak 
+
+2003-02-13 Lorinczy Zsigmond
+	* changing termdef.telnetEnumTermProfiles as Miguel Latore offered
+
+2003-02-13 Lorinczy Zsigmond
+	* Released dtelnet 1.2.0
+
+2002-12-26 Lorinczy Zsigmond
+	* Merry Christmass
+	* Adding two little (standalone) utility for UNIX: shkeys.c
+	  and shchars.c. They are in LF-only format!
+
+2002-02-11/2002-02-15 Enrique Grandes
+	* adding dtchars.* and ctab.* to dtelnet.dsp
+	* replacing BS_ETCHED static controls by GROUPBOX for win16 (dtelnet.rc)
+	* incrementing MARGIN_MAX in printing.c
+	* replacing calls to connectSetServerCharset() in connect.c due to useProfile
+	* removing duplicated code of filetype.c/connect.c for easy future modifications
+	* adding default values for connection profiles.
+	* now double quotes in arguments are removed directly in getoptInit()
+	* fixing unquoted /X in fileExecFavorites() (filetype.c)
+
+2002-02-15 Lorinczy Zsigmond
+	* In font selection dialog showing font width too
+
+2002-02-13 Mark Melvin
+        * moving escape into utils.c
+        * reverting /E command line option, was causing memory garbage on
+          emulation names.
+
+2002-02-11 massimo morara
+	* gcc.mak: link with 'libwinspool' (pro EnumPrinters())
+
+2001-12-20/2002-02-07 Enrique Grandes
+	* HTTP Proxy support.
+	* classic status bar panes.
+        * fixes in filetype.c
+	* reordering favorites dialog.
+	* fixing connect history save/restore problem.
+        * small fix in raw.c (synch without data mark problem)
+	* completing printing stuff.
+
+2002-02-01 massimo morara
+        * gcc.mak: added support for proxy.c and dtchars.c; removed support
+          for socks.c
+        * connect.c, connect.h, dtelnet.c: improved support for emulation
+          terminal via command line
+        
+2001-12-28/2002-01-23 Lorinczy Zsigmond
+        * moving functions fromhex, unescape into utils.c
+        * adding section [ExtraCharsets] to dtelnet.ini
+        * adding files dtchars.h dtchars.c
+        * changing the charset-selection in connect dialog: connect.c
+          and filetype.c
+        * showing extra charsets is Terminal menu: dtelnet.c
+	* updating copyright notice (removing Fred - sorry but there
+          are too many hackers to list them all)
+	* making 16-bit compilation possible again (multiple files)
+        * changing behaviour of PASTE in term.c - but now it's too slow !
+        * undoing the previous and changing COPY behaviour too
+
+2001-12-11 massimo morara
+        * gcc.mak: added support for socks.c and ctab.c
+
+2001-11-30 Lorinczy Zsigmond
+	Trying to handle graphic character sets...
+	2001-11-30: Adding 'acsc' field to dtelnet.set for later usage
+        2001-12-06: New files: ctab.h, ctab.c
+	2001-12-12: The problem seems to be fixed, modified emul.h, emul.c,
+                    termdef.c, ctab.h, ctab.c
+
+2001-10-29 Enrique Grandes
+	now the user can select the cursor style between block, underline 
+	or vertical line.
+
+2001-10-28 Enrique Grandes
+	Added SOCKS support.
+	changed: dtelnet.rc, resource.h, dtelnet.c, socket.c, socket.h
+	added: socks.c, socks.h, socksdef.h
+
+2001-10-26 Mark Melvin
+	Support for executing connection profiles (filetype.c). The file format
+	is standard INI file describing the connection. It is accepted 
+	with /X command line option (dtelnet /X server.ts).
+	Now has a "Favorites" menu a la IE, scans for ts files in dtelnet 
+	directory. Should fulfill TODO item no. 5 :)  but still need some work
+	yet.
+
+2001-09-10 massimo morara
+        * gcc.mak: added support for editor.c, filetype.c, printing.c and
+          termdef.c
+        * filetype.c: added "#include <stdlib.h>", pro _MAX_PATH (necessary
+          for gcc)
+
+2001-07-02 Mark Melvin
+	Moving terminal definition parsein out of dtelnet.c into separate 
+	source termdef.c 
+	Adding a dialog box while printing to abort print.	
+
+2001-06-30 Mark Melvin
+	Support for screen dump (PrintScreen) as proposed by Khader Alatrash
+	using existing print engine. Add permission variables to guard 
+	against unwanted printing.
+
+2001-06-15 Mark Melvin
+	Support for ANSI attached-printer (code \E[4i and \E[5i ) allowing
+	to print host text to local printer. You can test the functionality
+	with 'lpansi'. Still plain and no configurable options yet.
+
+2001-05-04 - 2001-07-18 Lorinczy Zsigmond
+	* Trying implement 'local edit mode', including wrapping lines
+          Related sources: emul.h,emul.c,term.c,editor.h,editor.c
+	  05.04: keys BackSpace and Delete work locally
+	  05.07: Insert
+	  05.08: Left/Right/Home/End
+	  05.10: key Enter sends the whole line
+          06.20: adding editor.h and editor.c
+	  06.28: refining cursor left
+          07.18: refining cursor right, adding menuitems to control
+                 cursor movement 
+
+2001-05-04 Lorinczy Zsigmond
+	* dtelnet.rc: reordering include files to avoid a warning
+
+2001-04-24 Lorinczy Zsigmond
+	* borl32.mak: Define windows version to 4.00 to let OpenFile
+	  dialog work in Start Logging
+
+2001-04-12 Lorinczy Zsigmond
+	* dtelnet.rc: Preparing for 1.1.8, Moving "New Window" down
+
+2001-04-02 Lorinczy Zsigmond
+	* raw.c:  local echoing is now ON by default
+	* emul.c: <ENTER> now sends 0D0A instead of 0D00
+	  independent from term.newLineMode
+	* adding dtelnet.set to pack.bat
+
+2001-03-29 Lorinczy Zsigmond
+	* dtelnet.c: fixes about TERM definition (for VT100)
+
+2001-03-27 Lorinczy Zsigmond
+	* emul.c: support for \E[39m and \E[49m ('clear underscore and reset
+          foreground color' and 'reset background color')
+
+2001-03-09 Mark Melvin
+	Rearranged command-line options, now you specify either /COEM or /CANSI
+	to select character sets, /A to specify background color.
+
+2001-03-08 Lorinczy Zsigmond
+	* resource.h: define BS_CENTER as 0 if not defined (for 16-bit version)
+	* emul.c:     in function 'emulAddChar' changing type of parameter 'c'
+		      to unsigned char
+
+2001-03-08 massimo morara
+	* fixed bug in getopt() (argv.c)
+	* fixed bug in connectGetProfile() (connect.c)
+
+2001-03-05 Lorinczy Zsigmond
+	* Cleaning C++ errors
+
+2001-02-12 Mark Melvin
+        * Support drag-and-drop for text files. The content of text file will
+          be pasted as if typed in from the terminal.
+        * Fix for large paste problem on some cases.
+
+2001-02-02 Mark Melvin
+	* Terminal definitions no longer hard-coded in dtelnet binary, now
+	  it is read from dtelnet.set with INI-file format.
+	* Added "New Window" menu item, to spawn itself.
+
+2001-01-17 LZS
+	* Adding terminal type rxvt
+
+2001-01-09 Mark Melvin
+	* Support mouse events with xterm emulation (quick hack).
+	* Project .ide and .mak for Borland C++ 5.
+
+2001-01-05 Lorinczy Zsigmond
+	* Adding field `flags' to struct emul, to enable smacs/rmacs of VT320
+
+2001-01-04 Lorinczy Zsigmond
+	* New function emulFuncKeyPress2 with to parameters (local and remote),
+	  to solve problem with echoing BackSpace (not correct yet).
+
+2001-01-02 Lorinczy Zsigmond
+	* Incomplete support for terminal types vt320 and vt420.
+
+2000-12-16 Timothy Ng <rocket96@cyberspace.org>
+	* Removed my earlier change (not listed here) which checked for
+	  valid \T arguments.
+
+2000-12-15 LZS
+	* Fix in term.c/termSysKeyDown to let ALT+key work in Windows NT
+
+2000-11-30
+	* Releasing 1.1.6
+
+2000-11-21 Lorinczy Zsigmond
+	* Calling emulResetTerminal before connecting
+
+2000-11-20 Lorinczy Zsigmond
+
+	* From now you can change this in Terminal/ServerCharSet menu
+	  the same conversion for sending...
+
+2000-11-13 Lorinczy Zsigmonmd
+
+	* In the connect dialog, the user can select the handling of
+          input characters above 128: ANSI/OEM
+
+2000-11-10 Lorinczy Zsigmond
+
+	* And now the user gets a little feedback about the selected font
+	  changed: resource.h, dtelnet.rc, font.h, font.c, term.c
+
+2000-11-09 Lorinczy Zsigmond
+
+	* Now the user can select the character set in the 'Font Dialog'
+	  changed: resource.h, dtelnet.rc, font.c, font.h, term.c 
+
+2000-11-06 Lorinczy Zsigmond
+
+        * term.c, emul.c: reverting previous change: calling OemToAnsi before
+          TextOut when using ANSI font, calling AnsiToOem when receiving
+          a character (and not in graphics mode)
+        * emul.c: ESC[11m and ESC[10m are now enabled to switch
+          graphics/standard mode
+        * emul.c: sending CR+LF instead of CR+NUL+LF
+
+2000-10-31 Lorinczy Zsigmond
+
+	* term.h, term.c: tracking charset of terminal font, 
+          calling AnsiToOemBuff before TextOut when using OEM font
+	* pack.bat: batch to create archives (uses pkzip25)
+
+2000-10-27 Massimo Morara <m.morara@altavista.net>
+
+        * socket.c (socketProcessPending): fixed bug [how suggested by 
+             Khader Al-Atrash]
+        * argv.c (getopt): correct handling of arguments with a parameter
+        * dtelnet.c (WinMain): added error handling for getopt() 
+        * term.c: added termFuncKeyDown()
+
+2000-10-27 Lorinczy Zsigmond
+
+	* about.c, dtelnet.c, font.c:
+	  In WM_COMMAND 'switch (wparam)' changed to 'switch (LOWORD(wparam))'
+	  to work correctly in 32 bit mode.
+
+2000-10-20 Lorinczy Zsigmond
+
+	* Changes in emul.h,emul.c,term.c to handle more function key (max 20)
+          Handling Shift+Fn as F(10+n), Alt+Fn as ESC Fn
+
+2000-10-10 Massimo Morara <m.morara@altavista.net>
+
+	* socket.c: added call to WSAAsyncSelect() in closeSocket()
+
+2000-10-09 Massimo Morara <m.morara@altavista.net>
+
+	* gcc.mak: added makefile for gcc (mingwin and cygwin)
+	* dtelnet.c: fixed bug in terminal emulation line options handling
+	* term.c: cleaning warnings (gcc)
+
+2000-09-02 Lorinczy Zsigmond <lzsiga@mail.ahiv.hu>
+
+	* no more wranings left (except for 20 "Parameter never used")
+	* releasing 1.1.5
+
+2000-08-02 Lorinczy Zsigmond <lzsiga@mail.ahiv.hu>
+
+	* borl32.mak: seems working
+	* dtelnet.c: WinMain became PASCAL instead of WINAPI
+	* dtelnet.def: stacksize added
+	* term.h,emul.h,dtelnet.h,socket.h: function prototypes corrected
+
+2000-07-29 Alexander Stohr <alexs@freepage.de>
+
+	* dtelnet.rc: added icon, incremented version number
+
+2000-07-27 Lorinczy Zsigmond <lzsiga@mail.ahiv.hu>
+
+	* emul.h,emul.c,term.c: BackSpace and Delete key handling corrected
+	* term.c: Alt+Enter sends Esc,Enter
+	* dtelnet.c: _stricmp -> stricmp
+	* utils.c:   _getcwd  -> getcwd
+	* font.c:   wparam's type in fomtDlgProc: WORD -> WPARAM
+	* borl32.mak,bccw32.cfg: for compiling with borlandc 55 (not working yet)
+
+2000-01-29  Dave Cole  <dave@dccs.com.au>
+
+	* term.c (termSetWindowSize): Fixed bug where shrinking window
+	  moved the cursor off the top of window - would freeze program.
+
+1999-12-25  Allen Petrarca <allenp@gmx.de>
+
+	* res/dtelnet.ico: Marry Christmas - here is a new dtelnet icon.
+
+1999-11-11  Dave Cole  <dave@dccs.com.au>
+
+	* connect.c: provide default values for dlgVars.
+	* Released dtelnet 1.1.2
+
+1999-11-06  Dave Cole  <dave@dccs.com.au>
+
+	* connect.c (connectSetPort): set the correct default protocol
+	  when setting the port on the command line.
+	* dtelnet.c (mainWndProc): use WM_ENTERSIZEMOVE and
+	  WM_EXITSIZEMOVE to compress all user window resizes into a
+	  single resize.  GNU readline programs caused problems
+	  due to Windows delaying delivery of the network read
+	  messages while in the resize event loop (I think).
+	* dtelnet.c (WinMain): if terminal type not specified on
+	  command line, assume a default of linux.
+	* raw.c (rawSetWindowSize): delay window resize notification
+	  until user has finished resizing.
+	* status.c: status bar panels resize depending upon the size
+	  of string displayed.
+
+1999-01-23  Massimo Morara  <m.morara@3di.it>
+
+	* dtelnet.c (WinMain): added /E argument to set the emulated
+	  terminal independently of the remote terminal type.
+
+1999-11-03  Tim Lesher <timl@epix.net>
+
+	* dtelnet.c: added position specification to the geometry
+	  command line argument.
+	* term.c: added position specification to geometry string.
+	  added wheel mouse capability.
+
+1999-11-03  Dave Cole  <dave@dccs.com.au>
+
+	* connect.c (connectOpenHost): use protocol field for setting
+	  socket protocol, not the port, after all, that is why it is
+	  there :-).
+	* Released dtelnet 1.1.1
+
+1999-11-02  Dave Cole  <dave@dccs.com.au>
+
+	* argc.c (getopt): convert all command line arguments to
+	  uppercase for comparison
+	* connect.c (enablePortProtocol): check port and set protocol
+	  appropriately.
+	* dtelnet.c (WinMain): add unix compatible dtelnet host [port]
+	* raw.c (parseTelnetCommand): enable local echo when remote
+	  telnet server requests it.
+	* emul.c (emulKeyPress): when not using login/telnet protocol,
+	  and performing local echo, send '\r\n' to terminal when user
+	  presses Return.
+	* Released dtelnet 1.0.8
+	* connect.c (isNonBlank): Fixed infinite loop.
+	* connect.c (connectDlgProc): set default protocol to none.
+	* Released dtelnet 1.0.9
+	* dtelnet.c (WinMain): do not set connect parameters when not
+	  requested - it disables connect profile saving (bug
+	  introduced in 1.0.8)
+	* Released dtelnet 1.1.0
+
+1999-03-04  Asoke K. Talukder  <asoke@mail.usa.com>
+
+	* Added new person to thanks page.
+	
+1999-03-03  Dave Cole  <dave@dccs.com.au>
+
+	* Released dtelnet 1.0.7
+
+1999-03-03  Asoke K. Talukder  <asoke@mail.usa.com>
+
+	* Updated help file with new features
+	
+1999-02-26  Frederic Dubru  <Frederic.Dubru@clin.ucl.ac.be>
+
+	* connect.c:
+	* connect.h:
+	* dtelnet.c:
+	* dtelnet.rc:
+	* term.c: Added Send Backspace as Delete option.
+
+1999-02-26  Dave Cole  <dave@dccs.com.au>
+
+	* Released dtelnet 1.0.6
+
+1999-02-25  Asoke K. Talukder  <asoke@mail.usa.com>
+
+	* Created help file dtelnet.hlp
+	
+1999-02-16  Dave Cole  <dave@dccs.com.au>
+
+	* lines.c (linesCharsInsert, linesCharsDelete, linesSetChar): When
+	modifying a line, truncate it's length to the window width.
+
+1999-02-15  Dave Cole  <dave@dccs.com.au>
+
+	* All: Changed wsprintf/wvsprintf back to sprint/vsprintf
+
+	* All: Many emulation bugs that were found using vttest were
+	fixed.
+
+	* term.c (winLinesInsert, winLinesDelete): Force windows to update
+	the region exposed by scrolling the window up/down.
+	
+	* Released dtelnet 1.0.5
+
+1999-02-07  Dave Cole  <dave@dccs.com.au>
+
+	* Released dtelnet 1.0.3
+
+	* emul.c (emulResetTerminal): Set the current attribute to the
+	clear attribue *before* clearing the screen.  Thanks to Julie
+	Brandon for reporting that bug.
+
+	* emul.c: Implemented cursor address reporting function.  Thanks
+	again to Julie Brandon for reporting that missing feature.
+
+	* emul.c: Implemented xterm title bar programming capability.
+
+	* raw.c: Changed the telnet protocol negatiation to send all
+	client initiated options as soon as the connection is established.
+
+	* Changed all use of sprintf/vsprintf to wsprintf/wvsprintf.
+
+	* Released dtelnet 1.0.4
+	
+1999-02-05  Dave Cole  <dave@dccs.com.au>
+
+	* connect.c (addConnectHistory):
+	(connectGetHistory): Fixed bug where connection protocol was not
+	saved in history in the Connect menu.
+
+	* font.c (enumFontProc):
+	(fontListNames): On advice of Asoke K. Talukder, reverted to
+	previous version to fix compile errors in VS6.0.
+
+1999-02-02  Dave Cole  <dave@dccs.com.au>
+
+	* Fixed syntax errors in VS6.0 pointed out by Asoke K. Talukder.
+
+	* Added socket protocol combobox to connect dialog.  Feature
+	suggested by Hugh Connell.
+
+	* Added Edit/Copy menu item for people who like Windows style
+	selection.
+
+	* Released dtelnet 1.0.2
+	
+1999-01-18  Dave Cole  <dave@dccs.com.au>
+
+	* Fixed ChangeLog format.
+	
+	* Released dtelnet 1.0.1 - easiest release ever.
+
+1999-01-23  Massimo Morara  <m.morara@3di.it>
+
+	* connect.c (connectGetProfile): exitOnDisconnect unconditionally
+	set from .INI file.
+
+	* dtelnet.c (WinMain): Fixed getopt parameters to allow /I to be
+	used.
+
+	* emul.c: Fixed '\' entry in usCharSet and graphicsCharSet.
+	
+1999-01-18  Dave Cole  <dave@dccs.com.au>
+
+	* dtelnet.c:
+	* term.c: Added a new menu option to switch between Windows
+	clipboard semantics and X style select == auto-copy to clipboard.
+
+	* term.c (termKeyPress): Fixed the handling of international
+	keyboards.  Thanks to Per Steinar Iversen for helping me with that
+	one.
+	
+	* Released dtelnet 1.0.0
+
+1998-12-29  Dave Cole  <dave@dccs.com.au>
+
+	* socket.c: Fixed a bug in the handlng of a closed remote end of
+	the socket which resulted in "Called recv() on a non-socket"
+	error.  Thanks to Hans Verbeek for reporting that one.
+	
+	* Released dtelnet 0.9.9
+
+1998-12-03  Dave Cole  <dave@dccs.com.au>
+
+	* dtelnet.c (WinMain):
+	* raw.c: Telnet BINARY mode negotiation disabled by default.  Use
+	/B on the command line to enable.
+
+	* dtelnet.c (telnetAppName): Added function to return application
+	name which is then used throughout program.
+	
+	* All source files now use DOS newlines.
+	
+	* Released dtelnet 0.9.8
+
+1998-12-02  Dave Cole  <dave@dccs.com.au>
+
+	* emul.c: Implemented graphics and US G0/G1 character sets.
+	
+	* Released dtelnet 0.9.7
+
+1998-12-01  Dave Cole  <dave@dccs.com.au>
+
+	* connect.c (connectDlgProc): Fixed combo box initialisation bug
+	in connect dialog.  Thanks to Scott Chen for pointing that one
+	out.
+
+	* raw.c: Made telnet protocol logging more robust.  Hopefully
+	finally fixing that GP fault.
+
+	* Released dtelnet 0.9.6
+
+1998-11-22  Dave Cole  <dave@dccs.com.au>
+
+	* raw.c: Added Telnet BINARY mode using code submitted by Pat
+	Narkinsky.
+	
+	* Released dtelnet 0.9.5
+
+1998-11-22  Dave Cole  <dave@dccs.com.au>
+
+	* Ported code to Win32.  The program now compiles with MSVC 1.5x
+	and MSVC 5.0
+	
+	* Released dtelnet 0.9.4
+
+1998-06-09  Dave Cole  <dave@dccs.com.au>
+
+	* term.c: Fixed backwards timer scroll.
+
+	* emul.c (emulScrollRegion): When setting region to whole screen,
+	cancel region so history is enabled.
+
+	* lines.c (linesClearRange): Clear to end of line/screen resets
+	end of line attribute on first line.
+
+	* Released dtelnet 0.9.3

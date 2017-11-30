@@ -1,0 +1,93 @@
+What about BackSpace? Is it Ctrl+H (0x08) or Ctrl+? (0x7f)?
+
+It is sheer madness if you ask me.
+
+There is a database called 'terminfo' which should describe
+how the different terminal-types work.
+(See manuals of terminfo(5), infocmp(1), tic(1), tput(1), ncurses(3) etc for details.)
+
+But in real life many emulator-programs ignore terminfo, and send what they see fit.
+(Or what the user chooses. In dtelnet it is 'Alt Backspace' setting at connect.)
+The remote side also often ignores terminfo, and excepts whatever is the default
+on that computer, eg Ctrl+? on linux, Ctrl+H on AIX.
+(Consult manuals of stty(1), termios(3) etc.)
+
+The result can be one of the followings:
+1. backspace key is working in every contexts (try it in ksh, dash or other user-unfriendly program)
+2. in some contexts backspace key produces ^H
+3. in some contexts backspace key produces ^?
+
+My suggestion:
+in case 1, do nothing
+in case 2, select a terminal-type in which backspace is ^? (linux, konsole*)
+in case 3, select a terminal-type in which backspace is ^H (xterm*, rxvt*)
+
+The best place for these settings is 'favorites', also known as *.ts files.
+
+Notes:
+
+#1:
+    if you want to make the server-side more flexible, try sg like this:
+
+    shell (.profile or similar):
+	if [ -n "$TERM" ]; then
+          X=$(tput kbs) && stty erase "$X"
+	fi
+
+    C:
+	http://dtelnet.sourceforge.net/setbkspc.c
+    
+#2:
+    in Linux, if you use TERM=konsole (or TERM=konsole-256color),
+    and the function-keys in Midnight Commander don't work properly
+    (eg Shift+F4 doesn't bring up an empty editor),
+    then add this to your 'ini' or 'mc.lib' file
+
+    [terminal:konsole]
+    copy=xterm
+    
+    [terminal:konsole-256color]
+    copy=xterm
+
+Addition on 20150316 by LZS:
+    To make linux-users' life easier I added terminal-types 'xterm-linuxbs'
+    and 'rxvt-linuxbs' to dtelnet.set. In these definitions kbs=0x7F and kabs=0x08.
+    (The name we send to the partner is still 'xterm' and 'rxvt'.)
+
+    This is good for linux if you don't try to telnet/ssh from linux to other system
+    (eg AIX), where xterm.kbs is 0x08
+
+Addition on 20160128 by LZS:
+    Yet another option is xterm-kbs177 -- It actually sends TERM=xterm-kbs177
+    to the server, so you have to use infocmp + editor + tic on the remote side
+    to create such a terminal-type; it's not trivial, and most users don't need it
+    either, only those who often go from one platform (eg linux) to other platform
+    (eg AIX), and experience problems with BS
+
+    PS: Some programs like 'vim' prefer xterm-* terminals to others,
+    that would be the advantage of 'xterm-kbs177' over 'konsole'
+
+
+    PPS: example terminfo-manipulation:
+
+infocmp xterm | \
+    sed 's/^xterm|/xterm-kbs177|/;s/kbs=\\b/kbs=\\177/;s/kbs=^H/kbs=\\177/;' \
+    >xterm-kbs177.ti
+    tic xterm-kbs177.ti
+infocmp -1 xterm-kbs177 xterm # check
+
+	example Midnight Commander manipulation (the location is distribtion-dependent!):
+
+printf '\n[terminal:xterm-kbs177]\ncopy=xterm\n' \
+    >>/usr/local/share/mc/mc.lib
+
+    P3S: also created xterm-kbs8:
+
+infocmp xterm | \
+    sed 's/^xterm|/xterm-kbs8|/;s/kbs=\\177/kbs=\\10/' \
+    >xterm-kbs8.ti
+    tic xterm-kbs8.ti
+    infocmp -1 xterm-kbs8 xterm # check
+
+printf '\n[terminal:xterm-kbs8]\ncopy=xterm\n' \
+    >>/usr/local/share/mc/mc.lib
