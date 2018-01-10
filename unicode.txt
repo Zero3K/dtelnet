@@ -17,6 +17,12 @@ o This file is in utf8; here is some characters to prove it:
 
     £↓←→↑▒∙░♦≥π─§┼≤└┘≠≠±█┬┤├┴┌┐│
 
+  You can use this file to test dtelnet: load it into some text-editor,
+  copy it into the Clipboard (Ctrl+A, Ctrl+C), 
+  then paste the content into dtelnet's windows (Shift+Insert)
+
+  (In off-line mode, set Terminal/ServerCharset to UTF8.)
+
 o Characters that don't exist in the used font should be substituted
   whith a 'default' character; often a square box: □
 
