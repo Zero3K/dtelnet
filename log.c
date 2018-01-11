@@ -202,7 +202,7 @@ void logReplay(const char* fileName)
     /* Read the log file and send it through the terminal emulator
      */
     while ((numRead = _lread(fh, buff, sizeof(buff))) > 0)
-	emulAddText((char *)buff, numRead, FALSE); /* Not sure :-) LZsiga */
+	emulAddText ((char *)buff, numRead, DTCHAR_ANSI, FALSE); /* <FIXME> UniCode LZsiga */
     _lclose(fh);
 }
 

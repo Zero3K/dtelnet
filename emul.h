@@ -88,8 +88,11 @@ Attrib getAttrColors(void);	/* only the colors from term.currAttr.attr, nothing 
 Attrib getAttrToStore(void);	/* depends on term.currAttr.attr and term.currAttr.flags&ATTRF_NEGATIVE */
 
 /* Process a stream of characters through terminal emulator */
-void emulAddText  (const char *text, int len, BOOL bKeyboard);
-void emulAddText2 (const void *text, int len, int dtcc, BOOL bKeyboard);
+void emulAddText (const void *text, int len, int dtcc, int sourceCode);
+#define SOURCE_SERVER    0 /* from server   */
+			   /* the following two are a bit different: */
+#define SOURCE_KEYBOARD  1 /* keyboard sends CR when Enter is pressed */
+#define SOURCE_CLIPBOARD 2 /* clipboard might contain LF-only lineends */
 
 /* data received from server, dtcc is determined from currEmul.fAnsi */
 void emulAddTextServer (const char *text, int len);

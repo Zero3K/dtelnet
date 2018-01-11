@@ -1,3 +1,5 @@
+	Unicode.TXT (testing TAB character)
+
 version 1.3.9 is the first version that tries to support
 Unicode, meaning UTF-8 towards the server,
 and UTF-16LE towards Windows API.

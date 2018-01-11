@@ -610,48 +610,8 @@ void termSelectPaste()
 		size= wsize * sizeof (uint16_t);
 	    }
 	}
-	if (size != 0 && size < INT_MAX)
-	{
-	    ConstBuffData b;
-
-	    b.ptr= text;
-	    b.len= size;
-
-	    emulFuncKeyPressB (EFK_LOCAL_SAME, &b, DTCHAR_UTF16);
-#if 0
-	    /* --- Paste problem identified by toomus vv
-	     * break the text into smaller chunks
-	     * (this helps if there's a bunch of text to transfer in
-	     *   the clipboard)
-	     */
-	    /* --- Direct sending commented out by LZS on 2002.01.04.
-	     * reasons: - local echo
-	     *          - charset conversion
-	     */
-	    /* 2002.01.09 by Enrique Grandes
-	     * translate '\r\n' into '\r' for emulKeyPress()
-	     */
-	    if (!socketConnected() || term.echoKeystrokes) {
-		/* When in local echo mode, or not connected,
-		   echo the characters
-		 */
-		emulAddText2 (text, size, DTCHAR_UTF16, TRUE);
-
-	    } else if (socketConnected()) {
-		size_t offset = 0;
-		size_t chunk_length = 4096;
-
-		while (offset < size) {
-		    size_t bytes_remaining = size - offset;
-
-		    if (chunk_length > bytes_remaining)
-			chunk_length = bytes_remaining;
-
-		    socketWrite(text+offset, chunk_length);
-		    offset += chunk_length;
-		}
-	    }
-#endif
+	if (size != 0 && size < INT_MAX) {
+	    emulAddText (text, size, DTCHAR_UTF16, SOURCE_CLIPBOARD);
 	}
 	/* Clean up
 	 */
@@ -2602,15 +2562,7 @@ void termWmChar (WPARAM key, LPARAM flags, int ccode)
 	emulFuncKeyPress2 (EFK_LOCAL_BACKSPACE, "\b", DTCHAR_ISO88591);
 
     } else if (key == '\r') {
-	if (term.echoKeystrokes || !socketConnected()) { /* this 'if' should be in emul.c */
-	    emulFuncKeyPress2 (EFK_LOCAL_SEND, 0, DTCHAR_ISO88591);
-	} else {
-	    emulKeyPress ('\r', DTCHAR_ASCII);
-	}
-
-/*  } else if (key == '\n') {
-	emulFuncKeyPress2 (EFK_LOCAL_SKIP, "\n");
-*/
+	emulKeyPress ('\r', DTCHAR_ASCII);
     } else {
 #if defined(_WIN32)
 	emulKeyPress (key, DTCHAR_UNICODE);

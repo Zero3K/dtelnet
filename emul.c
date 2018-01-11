@@ -1316,7 +1316,8 @@ static void emulParamInterpret(void)
 }
 
 static void emuli_FuncKeyPress (int localaction, const ConstBuffData *b, int dtcc, BOOL fDoPrintFrame);
-static void emuli_AddKeyboardText (const ConstBuffData *b, int dtcc, BOOL fDoPrintFrame);
+static void emuli_AddKeybClipText (const ConstBuffData *b, int dtcc,
+    int sourceCode, BOOL fDoPrintFrame);
 
 /* Device Status report
  * ANSI: CSI <param> n
@@ -2261,21 +2262,7 @@ static void emulEscapeChr (InputParsingState *pst, unsigned c);
 static void emulCSI (InputParsingState *pst);
 static void emuli_AddServerChar (uint32_t c, int dtcc, InputParsingState *pst);
 static void emuli_FuncKeyPress (int localaction, const ConstBuffData *b, int dtcc, BOOL fDoPrintFrame);
-
-/* Process a stream of characters through the terminal emulator.  This
- * is the main terminal emulation entry point.
- *
- * Args:
- * text - array of characters to process
- * len  - number of characters in the text array
- *
- * The emulator is implemented as a state machine which can handle
- * breaks in character sequences at any point.
- */
-void emulAddText (const char* text, int len, BOOL bKeyboard)
-{
-    emulAddText2 (text, len, DTCHAR_ANSI, bKeyboard); /* <fixme> unicode */
-}
+static void emuli_KeyPress (uint32_t ch, int dtcc, BOOL fDoPrintFrame);
 
 typedef struct IterStruct {
     int dtcc_in;			/* UTF16 -> 	UTF8 ->		other -> */
@@ -2342,6 +2329,16 @@ BOOL emuli_IterNextChar (IterStruct *ctx, uint32_t *pc)
     return retval;
 }
 
+/* Process a stream of characters through the terminal emulator.  This
+ * is the main terminal emulation entry point.
+ *
+ * Args:
+ * text - array of characters to process
+ * len  - number of characters in the text array
+ *
+ * The emulator is implemented as a state machine which can handle
+ * breaks in character sequences at any point.
+ */
 /* emulAddTextServer: calls logSession, emuli_BeforeAddText, emuli_AfterAddText */
 void emulAddTextServer (const char* text, int len)
 {
@@ -2400,7 +2397,7 @@ static void emuli_AfterAddText (void)
     winSetScrollbar();
 }
 
-void emulAddText2 (const void *text, int len, int dtcc, BOOL bKeyboard)
+void emulAddText (const void *text, int len, int dtcc, int sourceCode)
 {
     ASSERT(text != NULL && len >= 0);
 
@@ -2410,39 +2407,60 @@ void emulAddText2 (const void *text, int len, int dtcc, BOOL bKeyboard)
 
     emuli_BeforeAddText ();
 
-    if (bKeyboard) {
+    if (sourceCode != 0) {				/* <FIXME> keyboard vs clipboard */
 	ConstBuffData b;
 
 	b.ptr= text;
 	b.len= len;
-	emuli_AddKeyboardText (&b, dtcc, FALSE);
+	emuli_AddKeybClipText (&b, dtcc, sourceCode, FALSE);
 
     } else {
+	/* data from server is not implemented yet in this function */
 	exit (72);
     }
 
     emuli_AfterAddText ();
 }
 
-static void emuli_AddKeyboardChar (uint32_t c, int dtcc, BOOL fDoPrintFrame)
+static void emuli_AddKeybClipChar (uint32_t c, int dtcc, int sourceCode, BOOL fDoPrintFrame)
 {
-    if (c<=0x1f || c==0x7f ||
-	(dtcc==DTCHAR_UNICODE && c>=0x80 && c<=0x9f)) return;
-    emuli_AddChar (c, dtcc, TRUE, fDoPrintFrame);
+
+    if ((sourceCode==SOURCE_KEYBOARD  && c==0x0d) ||
+	(sourceCode==SOURCE_CLIPBOARD && c==0x0a)) {
+	BOOL fLocal= term.echoKeystrokes || !socketConnected();
+
+	if (fLocal) emuli_FuncKeyPress (EFK_LOCAL_SEND, NULL, 0, fDoPrintFrame);
+	else        emuli_KeyPress     ('\r', DTCHAR_ASCII, fDoPrintFrame);
+
+    } else if (c<=0x1f || c==0x7f ||
+	       (dtcc==DTCHAR_UNICODE && (c>=0x80 && c<=0x9f))) {
+	/* nope */
+
+    } else { /* Let's assume it is a printable character */
+	emuli_AddChar (c, dtcc, TRUE, fDoPrintFrame);
+    }
 }
 
-static void emuli_AddKeyboardText (const ConstBuffData *b, int dtcc, BOOL fDoPrintFrame)
+static void emuli_AddKeybClipText (const ConstBuffData *b, int dtcc,
+    int sourceCode, BOOL fDoPrintFrame)
 {
     uint32_t c;
     IterStruct itctx;
     int dtcc2;	/* if dtcc==UTFx then dtcc2==UTF32, otherwize dtcc2==dtcc */
+    Utf16StreamContext FromClipboardUtf16StreamContext= Empty_Utf16StreamContext;
 
     if (!b || !b->len) return;
     if (fDoPrintFrame) emuli_BeforeAddText ();
 
-    dtcc2= emuli_IterStart (&itctx, b, dtcc, &FromServerUtf8StreamContext, NULL);
+    if (sourceCode==SOURCE_KEYBOARD) {
+	dtcc2= emuli_IterStart (&itctx, b, dtcc,
+	    (Utf8StreamContext *)NULL, (Utf16StreamContext *)NULL);
+    } else {
+	dtcc2= emuli_IterStart (&itctx, b, dtcc,
+	    (Utf8StreamContext *)NULL, &FromClipboardUtf16StreamContext);
+    }
     while (emuli_IterNextChar (&itctx, &c)) {
-	emuli_AddKeyboardChar (c, dtcc2, FALSE);
+	emuli_AddKeybClipChar (c, dtcc2, sourceCode, FALSE);
     }
 
     if (fDoPrintFrame) emuli_AfterAddText ();
@@ -2949,12 +2967,12 @@ static void emulEscapeChr (InputParsingState *pst, unsigned c)
 
 /* Handle a normal key press
  */
-void emuli_KeyPress (uint32_t ch, int dtcc, BOOL fDoPrintFrame)
+static void emuli_KeyPress (uint32_t ch, int dtcc, BOOL fDoPrintFrame)
 {
     if (!socketConnected() || term.echoKeystrokes) {
 	/* When in local echo mode, or not connected, echo the character
 	 */
-	emuli_AddKeyboardChar (ch, dtcc, fDoPrintFrame);
+	emuli_AddKeybClipChar (ch, dtcc, SOURCE_KEYBOARD, fDoPrintFrame);
 
 	if (!socketConnected()) return;
     }
@@ -3081,7 +3099,7 @@ static void emuli_KeyboardLocalAction (int localaction, const ConstBuffData *b, 
 
 	case EFK_LOCAL_SAME:
 	    if (b && b->len) {
-		emuli_AddKeyboardText (b, dtcc, FALSE);
+		emuli_AddKeybClipText (b, dtcc, SOURCE_KEYBOARD, FALSE);
 	    }
 	    break;
 
